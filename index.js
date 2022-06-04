@@ -1,7 +1,10 @@
 const express = require("express");
 const res = require("express/lib/response");
+const Joi = require("joi");
 
 const app = express();
+
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Hello World');
@@ -12,19 +15,45 @@ const courses = [
     {id: 2, name: "Course 2"},
     {id: 3, name: "Course 3"}
 ]
-const error = [
-    {id: 1, status: 404, message: "404: page not found"},
-    {id: 2, status: 500, message: "500: Server error!"},
-    {id: 3, status: 503, message: "503 Error"},
-
-]
 app.get('/api/courses', (req, res) => {
     res.send(courses);
 });
 // params with dynamic value
 app.get('/api/courses/:id', (req, res) => {
+    
+
     const course = courses.find(c => c.id === parseInt(req.params.id));
     if (!course) res.status(404).send({type: "error", status: 404, message: "The id of the course you are looking for was not found or missing."});
+    res.send(course);
+
+
+
+});
+
+// To use post jason you need to enable json
+// app.use(express.json());
+
+app.post('/api/courses', (req, res) => {
+
+    // Use Joi validation
+    const schema = Joi.object(
+        {name: Joi.string().min(3).required()}
+    )
+    const result = schema.validate(req.body);
+
+
+    if (result.error) {
+        // Bad request status 400
+        res.status(400).send({type: "error", status: 404, message: result.error.details[0].message});
+        return;
+    }
+
+
+    const course =  {
+        id: courses.length + 1,
+        name: req.body.name
+    };
+    courses.push(course);
     res.send(course);
 
 });

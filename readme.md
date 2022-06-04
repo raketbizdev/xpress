@@ -36,6 +36,18 @@ install nodemon
 ``` 
 npm i nodemon
 ```
+npm is deprecated
+```
+npm install request
+```
+The most powerful schema description language and data validator for JavaScript.
 
+```
+npm install joi
+```
 
+Axios is a simple promise based HTTP client for the browser and node.js. Axios provides a simple to use library in a small package with a very extensible interface.
+```
+npm i axios
+```
 
